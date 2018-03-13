@@ -110,6 +110,8 @@ public:
     DocumentLayout m_documentLayout;
 
     qreal m_screenResolution; // pixels per point
+
+    QPdfDocumentRenderOptions m_renderOptions;
 };
 
 Q_DECLARE_TYPEINFO(QPdfViewPrivate::DocumentLayout, Q_MOVABLE_TYPE);

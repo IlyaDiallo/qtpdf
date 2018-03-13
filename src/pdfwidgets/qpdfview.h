@@ -39,6 +39,7 @@
 
 #include <QtPdfWidgets/qtpdfwidgetsglobal.h>
 #include <QtWidgets/qabstractscrollarea.h>
+#include <QPdfDocumentRenderOptions>
 
 QT_BEGIN_NAMESPACE
 
@@ -94,12 +95,14 @@ public:
     void setDocumentMargins(QMargins margins);
 
 public Q_SLOTS:
+    void setRenderOptions(QPdfDocumentRenderOptions options);
     void setPageMode(PageMode mode);
     void setZoomMode(ZoomMode mode);
     void setZoomFactor(qreal factor);
 
 Q_SIGNALS:
     void documentChanged(QPdfDocument *document);
+    void renderOptionsChanged(QPdfDocumentRenderOptions options);
     void pageModeChanged(PageMode pageMode);
     void zoomModeChanged(ZoomMode zoomMode);
     void zoomFactorChanged(qreal zoomFactor);

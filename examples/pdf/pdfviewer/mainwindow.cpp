@@ -82,6 +82,10 @@ MainWindow::MainWindow(QWidget *parent)
 
     ui->pdfView->setDocument(m_document);
 
+    QPdfDocumentRenderOptions options = QPdfDocumentRenderOptions();
+    options.setRenderFlags(QPdf::RenderAnnotations);
+    ui->pdfView->setRenderOptions(options);
+
     connect(ui->pdfView, &QPdfView::zoomFactorChanged,
             m_zoomSelector, &ZoomSelector::setZoomFactor);
 }

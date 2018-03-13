@@ -337,6 +337,19 @@ QPdfDocument *QPdfView::document() const
     return d->m_document;
 }
 
+void QPdfView::setRenderOptions(QPdfDocumentRenderOptions options)
+{
+    Q_D(QPdfView);
+
+    if (d->m_renderOptions == options)
+        return;
+
+    d->m_renderOptions = options;
+    d->invalidateDocumentLayout();
+
+    emit renderOptionsChanged(d->m_renderOptions);
+}
+
 QPdfPageNavigation *QPdfView::pageNavigation() const
 {
     Q_D(const QPdfView);
@@ -463,7 +476,7 @@ void QPdfView::paintEvent(QPaintEvent *event)
                 const QImage &img = pageIt.value();
                 painter.drawImage(pageGeometry.topLeft(), img);
             } else {
-                d->m_pageRenderer->requestPage(page, pageGeometry.size());
+                d->m_pageRenderer->requestPage(page, pageGeometry.size(), d->m_renderOptions);
             }
         }
     }
