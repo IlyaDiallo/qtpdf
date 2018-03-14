@@ -54,9 +54,9 @@ PageSelector::PageSelector(QWidget *parent)
 
     m_pageNumberEdit = new QLineEdit(this);
     m_pageNumberEdit->setAlignment(Qt::AlignRight);
+    m_pageNumberEdit->setVisible(false);
 
     m_pageCountLabel = new QLabel(this);
-    m_pageCountLabel->setText("0");
 
     m_nextPageButton = new QToolButton(this);
     m_nextPageButton->setText(">");
@@ -76,7 +76,12 @@ void PageSelector::setPageNavigation(QPdfPageNavigation *pageNavigation)
     connect(m_pageNavigation, &QPdfPageNavigation::canGoToPreviousPageChanged, m_previousPageButton, &QToolButton::setEnabled);
 
     connect(m_pageNavigation, &QPdfPageNavigation::currentPageChanged, this, &PageSelector::onCurrentPageChanged);
-    connect(m_pageNavigation, &QPdfPageNavigation::pageCountChanged, this, [this](int pageCount){ m_pageCountLabel->setText(QString::fromLatin1("/ %1").arg(pageCount)); });
+    connect(m_pageNavigation, &QPdfPageNavigation::pageCountChanged, this,
+            [this](int pageCount) {
+                m_pageNumberEdit->setVisible(true);
+                m_pageCountLabel->setText(QString::fromLatin1("/ %1").arg(pageCount));
+            }
+    );
 
     connect(m_pageNumberEdit, &QLineEdit::editingFinished, this, &PageSelector::pageNumberEdited);
 
@@ -88,10 +93,7 @@ void PageSelector::setPageNavigation(QPdfPageNavigation *pageNavigation)
 
 void PageSelector::onCurrentPageChanged(int page)
 {
-    if (m_pageNavigation->pageCount() == 0)
-        m_pageNumberEdit->setText(QString::number(0));
-    else
-        m_pageNumberEdit->setText(QString::number(page + 1));
+    m_pageNumberEdit->setText(QString::number(page + 1));
 }
 
 void PageSelector::pageNumberEdited()
