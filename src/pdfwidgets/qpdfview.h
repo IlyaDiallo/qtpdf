@@ -84,6 +84,7 @@ public:
 
     QPdfPageNavigation *pageNavigation() const;
 
+    QPdfDocumentRenderOptions renderOptions() const;
     PageMode pageMode() const;
     ZoomMode zoomMode() const;
     qreal zoomFactor() const;

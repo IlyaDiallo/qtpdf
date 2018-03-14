@@ -357,6 +357,13 @@ QPdfPageNavigation *QPdfView::pageNavigation() const
     return d->m_pageNavigation;
 }
 
+QPdfDocumentRenderOptions QPdfView::renderOptions() const
+{
+    Q_D(const QPdfView);
+
+    return d->m_renderOptions;
+}
+
 QPdfView::PageMode QPdfView::pageMode() const
 {
     Q_D(const QPdfView);
