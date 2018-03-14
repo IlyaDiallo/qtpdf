@@ -1,6 +1,6 @@
 TEMPLATE = app
 TARGET = pdfviewer
-QT += core gui widgets pdfwidgets
+QT += core gui widgets printsupport pdfwidgets
 
 SOURCES += \
     main.cpp \

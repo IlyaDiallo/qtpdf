@@ -39,6 +39,7 @@
 
 #include <QLoggingCategory>
 #include <QMainWindow>
+#include <QPdfDocumentRenderOptions>
 
 Q_DECLARE_LOGGING_CATEGORY(lcExample)
 
@@ -70,6 +71,7 @@ private slots:
 
     // action handlers
     void on_actionOpen_triggered();
+    void on_actionPrint_triggered();
     void on_actionQuit_triggered();
     void on_actionAbout_triggered();
     void on_actionAbout_Qt_triggered();

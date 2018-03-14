@@ -41,6 +41,9 @@
 #include "zoomselector.h"
 
 #include <QFileDialog>
+#include <QPrintDialog>
+#include <QPrinter>
+#include <QPainter>
 #include <QMessageBox>
 #include <QPdfBookmarkModel>
 #include <QPdfDocument>
@@ -82,9 +85,11 @@ MainWindow::MainWindow(QWidget *parent)
 
     ui->pdfView->setDocument(m_document);
 
-    QPdfDocumentRenderOptions options = QPdfDocumentRenderOptions();
-    options.setRenderFlags(QPdf::RenderAnnotations);
-    ui->pdfView->setRenderOptions(options);
+    QPdfDocumentRenderOptions renderOptions;
+    renderOptions.setRenderFlags(QPdf::RenderAnnotations);
+    ui->pdfView->setRenderOptions(renderOptions);
+
+    ui->actionPrint->setDisabled(true);
 
     connect(ui->pdfView, &QPdfView::zoomFactorChanged,
             m_zoomSelector, &ZoomSelector::setZoomFactor);
@@ -101,6 +106,7 @@ void MainWindow::open(const QUrl &docLocation)
         m_document->load(docLocation.toLocalFile());
         const auto documentTitle = m_document->metaData(QPdfDocument::Title).toString();
         setWindowTitle(!documentTitle.isEmpty() ? documentTitle : QStringLiteral("PDF Viewer"));
+        ui->actionPrint->setDisabled(false);
     } else {
         qCDebug(lcExample) << docLocation << "is not a valid local file";
         QMessageBox::critical(this, tr("Failed to open"), tr("%1 is not a valid local file").arg(docLocation.toString()));
@@ -122,6 +128,38 @@ void MainWindow::on_actionOpen_triggered()
     QUrl toOpen = QFileDialog::getOpenFileUrl(this, tr("Choose a PDF"), QUrl(), "Portable Documents (*.pdf)");
     if (toOpen.isValid())
         open(toOpen);
+}
+
+void MainWindow::on_actionPrint_triggered()
+{
+    QPrinter printer(QPrinter::PrinterResolution);
+
+    bool isLandscape = m_document->pageSize(0).width() > m_document->pageSize(0).height();
+    printer.setPageOrientation( isLandscape ? QPageLayout::Landscape : QPageLayout::Portrait );
+
+    QPrintDialog printDialog(&printer, this);
+    if (printDialog.exec() != QDialog::Accepted) {
+        return;
+    }
+
+    int nbOfPages = m_document->pageCount();
+
+    QPainter painter;
+    painter.begin(&printer);
+
+    for (int page = 0; page < nbOfPages; ++page) {
+
+        QRect paintRect = printer.pageLayout().paintRectPixels(printer.resolution());
+        paintRect.moveTo(0, 0);
+        const QImage image = m_document->render(page, paintRect.size(), ui->pdfView->renderOptions());
+        painter.drawImage(paintRect, image);
+
+        if (page < nbOfPages - 1) {
+            printer.newPage();
+        }
+    }
+
+    painter.end();
 }
 
 void MainWindow::on_actionQuit_triggered()
