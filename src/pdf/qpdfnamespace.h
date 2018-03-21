@@ -40,7 +40,6 @@
 #include <QObject>
 
 namespace QPdf {
-    Q_NAMESPACE
 
     enum Rotation {
         Rotate0,
@@ -48,7 +47,6 @@ namespace QPdf {
         Rotate180,
         Rotate270
     };
-    Q_ENUM_NS(Rotation)
 
     enum RenderFlag {
         NoRenderFlags = 0x000,
@@ -60,7 +58,6 @@ namespace QPdf {
         RenderImageAliased = 0x020,
         RenderPathAliased = 0x040
     };
-    Q_FLAG_NS(RenderFlag)
     Q_DECLARE_FLAGS(RenderFlags, RenderFlag)
 }
 
